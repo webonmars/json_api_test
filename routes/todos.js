@@ -1,40 +1,20 @@
 var express         = require("express"),
     router          = express.Router(),
-    db              = require("../models");
-    
-router.get("/", function(req, res){
-    db.Todo.find()
-    .then(function(todos){
-        res.json(todos);
-    })
-    .catch(function(err){
-        res.send(err);
-    })
-});
+    db              = require("../models"),
+    helpers         = require("../helpers/todos");
 
-router.post("/", function(req, res){
-    db.Todo.create(req.body)
-    .then(function(newTodo){
-        res.status(201).json(newTodo);
-    })
-    .catch(function(err){
-        res.send(err);
-    })
-});
+// router.get("/");
+// router.post("/");
+// NEW COMBINED VERSION
 
-router.get("/:todoId", function(req, res){
-    db.Todo.findById(req.params.todoId)
-    .then(function(foundToDo){
-        res.json(foundToDo);
-    })
-    .catch(function(err){
-        res.send(err);
-    })
-});
+router.route("/")
+  .get(helpers.getTodos)
+  .post(helpers.createTodos)
 
-router.put("/:todoId", function(req, res){
-    res.send("UPDATE ROUTE!");
-});
+router.route("/:todoId")
+  .get(helpers.getTodo)
+  .put(helpers.updateTodo)
+  .delete(helpers.deleteTodo)
 
 
 module.exports = router;
